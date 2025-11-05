@@ -3,6 +3,7 @@ import 'package:bookswap_app/providers/book_provider.dart';
 import 'package:bookswap_app/providers/chat_provider.dart';
 import 'package:bookswap_app/providers/swap_provider.dart';
 import 'package:bookswap_app/screens/auth/login_screen.dart';
+import 'package:bookswap_app/screens/auth/verification_screen.dart';
 import 'package:bookswap_app/screens/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -51,10 +52,18 @@ class MyApp extends StatelessWidget {
         // Use auth state to determine initial route
         home: Consumer<AuthProvider>(
           builder: (context, authProvider, _) {
-            if (authProvider.isAuthenticated) {
-              return const MainScreen();
+            // Not authenticated - show login
+            if (!authProvider.isAuthenticated) {
+              return const LoginScreen();
             }
-            return const LoginScreen();
+            
+            // Authenticated but email not verified - show verification screen
+            if (!authProvider.isEmailVerified) {
+              return const VerificationScreen();
+            }
+            
+            // Authenticated and verified - show main app
+            return const MainScreen();
           },
         ),
       ),

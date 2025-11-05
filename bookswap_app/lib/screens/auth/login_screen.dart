@@ -4,7 +4,6 @@ import '../../constants/colors.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/Button.dart';
 import 'signup_screen.dart';
-import 'verification_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,22 +37,24 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!mounted) return;
 
-    if (success) {
-      // Check if email is verified
-      if (!authProvider.isEmailVerified) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const VerificationScreen()),
-        );
-      }
-    } else {
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+    if (!success) {
+      // Show error message in a more visible dialog
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Sign In Failed'),
           content: Text(authProvider.errorMessage ?? 'Failed to sign in'),
-          backgroundColor: Colors.red,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
         ),
       );
     }
+    // If success, the Consumer in main.dart will automatically navigate to MainScreen
+    // or VerificationScreen will be shown by the main.dart auth flow
   }
 
   @override
