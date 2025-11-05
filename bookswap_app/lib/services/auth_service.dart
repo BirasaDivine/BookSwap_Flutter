@@ -83,13 +83,13 @@ class AuthService {
         final updates = <String, dynamic>{
           'emailVerified': userCredential.user!.emailVerified,
         };
-        
+
         // Sync displayName from Firebase Auth if it exists
-        if (userCredential.user!.displayName != null && 
+        if (userCredential.user!.displayName != null &&
             userCredential.user!.displayName!.isNotEmpty) {
           updates['displayName'] = userCredential.user!.displayName!;
         }
-        
+
         await _firestore
             .collection('users')
             .doc(userCredential.user!.uid)

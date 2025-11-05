@@ -81,8 +81,8 @@ class _AddBookScreenState extends State<AddBookScreen> {
     final userName = authProvider.userModel?.displayName.isNotEmpty == true
         ? authProvider.userModel!.displayName
         : (authProvider.user?.displayName?.isNotEmpty == true
-            ? authProvider.user!.displayName!
-            : authProvider.user?.email?.split('@')[0] ?? 'Unknown');
+              ? authProvider.user!.displayName!
+              : authProvider.user?.email?.split('@')[0] ?? 'Unknown');
 
     if (userId == null) {
       setState(() => _isLoading = false);

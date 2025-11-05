@@ -4,9 +4,12 @@ import '../models/user_model.dart';
 /// Helper service for user-related operations
 class UserHelper {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   /// Get display name for a user, with fallbacks
-  static Future<String> getDisplayName(String userId, String? fallbackName) async {
+  static Future<String> getDisplayName(
+    String userId,
+    String? fallbackName,
+  ) async {
     try {
       final doc = await _firestore.collection('users').doc(userId).get();
       if (doc.exists) {
@@ -16,9 +19,11 @@ class UserHelper {
           return displayName;
         }
       }
-      
+
       // Fallback to provided name or 'Unknown'
-      return fallbackName != null && fallbackName.isNotEmpty && fallbackName != 'Unknown'
+      return fallbackName != null &&
+              fallbackName.isNotEmpty &&
+              fallbackName != 'Unknown'
           ? fallbackName
           : 'Unknown';
     } catch (e) {
@@ -26,7 +31,7 @@ class UserHelper {
       return fallbackName ?? 'Unknown';
     }
   }
-  
+
   /// Get user model by ID
   static Future<UserModel?> getUserById(String userId) async {
     try {
