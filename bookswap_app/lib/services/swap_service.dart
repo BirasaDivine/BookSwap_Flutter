@@ -18,15 +18,28 @@ class SwapService {
     String? message,
   }) async {
     try {
+      print('=== Creating swap offer ===');
+      print('Requested book ID: $requestedBookId');
+      print('Offered book ID: $offeredBookId');
+      print('Requester ID: $requesterId');
+
       // Get book details
       final requestedBook = await _bookService.getBookById(requestedBookId);
       final offeredBook = await _bookService.getBookById(offeredBookId);
 
       if (requestedBook == null || offeredBook == null) {
+        print('ERROR: Book not found!');
+        print('Requested book: $requestedBook');
+        print('Offered book: $offeredBook');
         throw Exception('Book not found');
       }
 
+      print('Requested book: ${requestedBook.title}');
+      print('Offered book: ${offeredBook.title}');
+
       final swapId = _uuid.v4();
+      print('Generated swap ID: $swapId');
+
       final swapOffer = SwapOfferModel(
         id: swapId,
         requestedBookId: requestedBookId,
@@ -42,19 +55,27 @@ class SwapService {
         message: message,
       );
 
+      print('Swap offer model created, saving to Firestore...');
+      print('Swap offer data: ${swapOffer.toMap()}');
+
       // Save swap offer to Firestore
       await _firestore
           .collection('swap_offers')
           .doc(swapId)
           .set(swapOffer.toMap());
 
+      print('✅ Swap offer saved successfully!');
+
       // Mark both books as unavailable
+      print('Marking books as unavailable...');
       await _bookService.markBookAsUnavailable(requestedBookId);
       await _bookService.markBookAsUnavailable(offeredBookId);
+      print('✅ Books marked as unavailable');
 
       return swapOffer;
-    } catch (e) {
-      print('Create swap offer error: $e');
+    } catch (e, stackTrace) {
+      print('❌ Create swap offer error: $e');
+      print('Stack trace: $stackTrace');
       rethrow;
     }
   }
