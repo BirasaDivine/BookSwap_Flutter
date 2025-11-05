@@ -449,11 +449,18 @@ class BookDetailScreen extends StatelessWidget {
     );
 
     if (selectedBook != null) {
+      // Get requester name with fallbacks
+      final requesterName = authProvider.userModel?.displayName.isNotEmpty == true
+          ? authProvider.userModel!.displayName
+          : (authProvider.user?.displayName?.isNotEmpty == true
+              ? authProvider.user!.displayName!
+              : authProvider.user?.email?.split('@')[0] ?? 'Unknown');
+      
       final success = await swapProvider.createSwapOffer(
         requestedBookId: book.id,
         offeredBookId: selectedBook.id,
         requesterId: authProvider.user!.uid,
-        requesterName: authProvider.userModel!.displayName,
+        requesterName: requesterName,
       );
 
       if (context.mounted) {
