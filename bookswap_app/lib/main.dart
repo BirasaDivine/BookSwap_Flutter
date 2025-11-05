@@ -1,40 +1,63 @@
-import 'package:bookswap_app/screens/Chats_screen.dart';
-import 'package:bookswap_app/screens/Listings_screen.dart';
-import 'package:bookswap_app/screens/Login_screen.dart';
-import 'package:bookswap_app/screens/home_screen.dart';
-import 'package:bookswap_app/screens/settings_screen.dart';
+import 'package:bookswap_app/providers/auth_provider.dart';
+import 'package:bookswap_app/providers/book_provider.dart';
+import 'package:bookswap_app/providers/chat_provider.dart';
+import 'package:bookswap_app/providers/swap_provider.dart';
+import 'package:bookswap_app/screens/auth/login_screen.dart';
+import 'package:bookswap_app/screens/main_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import '../constants/colors.dart';
+import 'package:provider/provider.dart';
+import 'constants/colors.dart';
 
-/// Entry point of the Study Planner App
+/// Entry point of the BookSwap App
 void main() async {
   // Ensure Flutter engine is initialized before any async operations
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp();
 
   // Run the main app widget
   runApp(const MyApp());
 }
 
-/// The root widget of the Study Planner App
+/// The root widget of the BookSwap App
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // Hide the debug banner
-      debugShowCheckedModeBanner: false,
-      title: 'Study Planner App',
-      theme: ThemeData(cardColor: AppColors.primary),
-      // The default landing screen
-      home: const LoginScreen(),
-      // Named routes for navigation
-      routes: {
-        '/home': (ctx) => const HomeScreen(),
-        '/listings': (ctx) => const ListingsScreen(),
-        '/chats': (ctx) => const ChatsScreen(),
-        '/settings': (ctx) => const SettingsScreen(),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => BookProvider()),
+        ChangeNotifierProvider(create: (_) => SwapProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
+      ],
+      child: MaterialApp(
+        // Hide the debug banner
+        debugShowCheckedModeBanner: false,
+        title: 'BookSwap App',
+        theme: ThemeData(
+          primaryColor: AppColors.primary,
+          scaffoldBackgroundColor: Colors.white,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primary,
+            primary: AppColors.primary,
+            secondary: AppColors.yellow,
+          ),
+          useMaterial3: true,
+        ),
+        // Use auth state to determine initial route
+        home: Consumer<AuthProvider>(
+          builder: (context, authProvider, _) {
+            if (authProvider.isAuthenticated) {
+              return const MainScreen();
+            }
+            return const LoginScreen();
+          },
+        ),
+      ),
     );
   }
 }
