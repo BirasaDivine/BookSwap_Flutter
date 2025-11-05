@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
 import '../../constants/colors.dart';
 import '../../models/book_model.dart';
 import '../../providers/auth_provider.dart';
@@ -70,44 +71,7 @@ class BookDetailScreen extends StatelessWidget {
                 ),
               ),
               child: book.imageUrl != null
-                  ? Image.network(
-                      book.imageUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.menu_book_rounded,
-                                size: 100,
-                                color: AppColors.primary.withOpacity(0.3),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Image not available',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
-                                : null,
-                            color: AppColors.yellow,
-                          ),
-                        );
-                      },
-                    )
+                  ? _buildBookImage(book.imageUrl!)
                   : Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -313,6 +277,94 @@ class BookDetailScreen extends StatelessWidget {
     }
   }
 
+  Widget _buildBookImage(String imageUrl) {
+    // Check if it's a base64 image
+    if (imageUrl.startsWith('data:image')) {
+      try {
+        final base64String = imageUrl.split(',')[1];
+        final bytes = base64Decode(base64String);
+        return Image.memory(
+          bytes,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        );
+      } catch (e) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.menu_book_rounded,
+                size: 100,
+                color: AppColors.primary.withOpacity(0.3),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Image error',
+                style: TextStyle(color: Colors.grey[600], fontSize: 14),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      // Network URL (for backward compatibility)
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (context, error, stackTrace) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.menu_book_rounded,
+                  size: 100,
+                  color: AppColors.primary.withOpacity(0.3),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Image not available',
+                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  Widget _buildSmallImage(String imageUrl) {
+    // Check if it's a base64 image
+    if (imageUrl.startsWith('data:image')) {
+      try {
+        final base64String = imageUrl.split(',')[1];
+        final bytes = base64Decode(base64String);
+        return Image.memory(
+          bytes,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Icon(Icons.book, color: AppColors.primary.withOpacity(0.5));
+          },
+        );
+      } catch (e) {
+        return Icon(Icons.book, color: AppColors.primary.withOpacity(0.5));
+      }
+    } else {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Icon(Icons.book, color: AppColors.primary.withOpacity(0.5));
+        },
+      );
+    }
+  }
+
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
@@ -373,16 +425,7 @@ class BookDetailScreen extends StatelessWidget {
                   child: myBook.imageUrl != null
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(4),
-                          child: Image.network(
-                            myBook.imageUrl!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Icon(
-                                Icons.book,
-                                color: AppColors.primary.withOpacity(0.5),
-                              );
-                            },
-                          ),
+                          child: _buildSmallImage(myBook.imageUrl!),
                         )
                       : Icon(
                           Icons.menu_book_rounded,

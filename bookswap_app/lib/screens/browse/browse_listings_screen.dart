@@ -6,6 +6,7 @@ import '../../providers/book_provider.dart';
 import '../../models/book_model.dart';
 import '../book/book_detail_screen.dart';
 import '../book/add_book_screen.dart';
+import 'dart:convert';
 
 class BrowseListingsScreen extends StatefulWidget {
   const BrowseListingsScreen({super.key});
@@ -198,32 +199,7 @@ class BookListCard extends StatelessWidget {
                 child: book.imageUrl != null
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          book.imageUrl!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Center(
-                              child: Icon(
-                                Icons.book_rounded,
-                                size: 40,
-                                color: AppColors.primary.withOpacity(0.5),
-                              ),
-                            );
-                          },
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value:
-                                    loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                    : null,
-                                color: AppColors.yellow,
-                              ),
-                            );
-                          },
-                        ),
+                        child: _buildImage(book.imageUrl!),
                       )
                     : Center(
                         child: Icon(
@@ -233,7 +209,6 @@ class BookListCard extends StatelessWidget {
                         ),
                       ),
               ),
-
               const SizedBox(width: 12),
 
               // Book Details
@@ -346,6 +321,52 @@ class BookListCard extends StatelessWidget {
       return '${difference.inMinutes} minute${difference.inMinutes > 1 ? 's' : ''} ago';
     } else {
       return 'Just now';
+    }
+  }
+
+  Widget _buildImage(String imageUrl) {
+    // Check if it's a base64 image
+    if (imageUrl.startsWith('data:image')) {
+      try {
+        final base64String = imageUrl.split(',')[1];
+        final bytes = base64Decode(base64String);
+        return Image.memory(
+          bytes,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Center(
+              child: Icon(
+                Icons.book_rounded,
+                size: 40,
+                color: AppColors.primary.withOpacity(0.5),
+              ),
+            );
+          },
+        );
+      } catch (e) {
+        return Center(
+          child: Icon(
+            Icons.book_rounded,
+            size: 40,
+            color: AppColors.primary.withOpacity(0.5),
+          ),
+        );
+      }
+    } else {
+      // It's a network URL (for backward compatibility)
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Center(
+            child: Icon(
+              Icons.book_rounded,
+              size: 40,
+              color: AppColors.primary.withOpacity(0.5),
+            ),
+          );
+        },
+      );
     }
   }
 }

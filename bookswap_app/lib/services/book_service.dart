@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
+import 'dart:convert';
 import '../models/book_model.dart';
 
 /// Service for handling book-related Firestore operations
 class BookService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
   final _uuid = const Uuid();
 
   /// Create a new book listing
@@ -24,13 +23,13 @@ class BookService {
       final bookId = _uuid.v4();
       String? imageUrl;
 
-      // Upload image if provided (optional - gracefully handle errors)
+      // Convert image to base64 if provided
       if (imageFile != null) {
         try {
-          imageUrl = await _uploadBookImage(bookId, imageFile);
+          final bytes = await imageFile.readAsBytes();
+          imageUrl = 'data:image/jpeg;base64,${base64Encode(bytes)}';
         } catch (e) {
-          print('Image upload failed, continuing without image: $e');
-          // Continue without image instead of failing completely
+          print('Image encoding failed, continuing without image: $e');
           imageUrl = null;
         }
       }
@@ -52,18 +51,6 @@ class BookService {
       return book;
     } catch (e) {
       print('Create book error: $e');
-      rethrow;
-    }
-  }
-
-  /// Upload book image to Firebase Storage
-  Future<String> _uploadBookImage(String bookId, File imageFile) async {
-    try {
-      final ref = _storage.ref().child('book_images/$bookId.jpg');
-      final uploadTask = await ref.putFile(imageFile);
-      return await uploadTask.ref.getDownloadURL();
-    } catch (e) {
-      print('Upload image error: $e');
       rethrow;
     }
   }
@@ -129,10 +116,14 @@ class BookService {
       if (swapFor != null) updates['swapFor'] = swapFor;
       if (isAvailable != null) updates['isAvailable'] = isAvailable;
 
-      // Upload new image if provided
+      // Convert new image to base64 if provided
       if (imageFile != null) {
-        final imageUrl = await _uploadBookImage(bookId, imageFile);
-        updates['imageUrl'] = imageUrl;
+        try {
+          final bytes = await imageFile.readAsBytes();
+          updates['imageUrl'] = 'data:image/jpeg;base64,${base64Encode(bytes)}';
+        } catch (e) {
+          print('Image encoding failed: $e');
+        }
       }
 
       await _firestore.collection('books').doc(bookId).update(updates);
@@ -145,14 +136,7 @@ class BookService {
   /// Delete a book listing
   Future<void> deleteBook(String bookId) async {
     try {
-      // Delete image from storage if exists
-      try {
-        await _storage.ref().child('book_images/$bookId.jpg').delete();
-      } catch (e) {
-        print('No image to delete or error deleting image: $e');
-      }
-
-      // Delete book document
+      // Delete book document (no need to delete Storage images)
       await _firestore.collection('books').doc(bookId).delete();
     } catch (e) {
       print('Delete book error: $e');
