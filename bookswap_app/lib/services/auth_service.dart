@@ -78,11 +78,22 @@ class AuthService {
       }
 
       // Update email verification status in Firestore
+      // Also ensure displayName is synced
       if (userCredential.user != null) {
+        final updates = <String, dynamic>{
+          'emailVerified': userCredential.user!.emailVerified,
+        };
+        
+        // Sync displayName from Firebase Auth if it exists
+        if (userCredential.user!.displayName != null && 
+            userCredential.user!.displayName!.isNotEmpty) {
+          updates['displayName'] = userCredential.user!.displayName!;
+        }
+        
         await _firestore
             .collection('users')
             .doc(userCredential.user!.uid)
-            .update({'emailVerified': userCredential.user!.emailVerified});
+            .update(updates);
       }
 
       return userCredential;
