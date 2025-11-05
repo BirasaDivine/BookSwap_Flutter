@@ -56,30 +56,80 @@ class BookDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Book Image
-            if (book.imageUrl != null)
-              Container(
-                width: double.infinity,
-                height: 300,
-                color: Colors.grey[200],
-                child: Image.network(
-                  book.imageUrl!,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Center(
-                      child: Icon(Icons.book, size: 100, color: Colors.grey),
-                    );
-                  },
-                ),
-              )
-            else
-              Container(
-                width: double.infinity,
-                height: 300,
-                color: Colors.grey[200],
-                child: const Center(
-                  child: Icon(Icons.book, size: 100, color: Colors.grey),
+            Container(
+              width: double.infinity,
+              height: 300,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    AppColors.primary.withOpacity(0.1),
+                    AppColors.yellow.withOpacity(0.1),
+                  ],
                 ),
               ),
+              child: book.imageUrl != null
+                  ? Image.network(
+                      book.imageUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.menu_book_rounded,
+                                size: 100,
+                                color: AppColors.primary.withOpacity(0.3),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Image not available',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                : null,
+                            color: AppColors.yellow,
+                          ),
+                        );
+                      },
+                    )
+                  : Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.auto_stories_rounded,
+                            size: 120,
+                            color: AppColors.primary.withOpacity(0.3),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No Image',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            ),
 
             Padding(
               padding: const EdgeInsets.all(24.0),
@@ -313,14 +363,32 @@ class BookDetailScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final myBook = myBooks[index];
               return ListTile(
-                leading: myBook.imageUrl != null
-                    ? Image.network(
-                        myBook.imageUrl!,
-                        width: 40,
-                        height: 60,
-                        fit: BoxFit.cover,
-                      )
-                    : const Icon(Icons.book),
+                leading: Container(
+                  width: 40,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: AppColors.primary.withOpacity(0.1),
+                  ),
+                  child: myBook.imageUrl != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: Image.network(
+                            myBook.imageUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Icon(
+                                Icons.book,
+                                color: AppColors.primary.withOpacity(0.5),
+                              );
+                            },
+                          ),
+                        )
+                      : Icon(
+                          Icons.menu_book_rounded,
+                          color: AppColors.primary.withOpacity(0.5),
+                        ),
+                ),
                 title: Text(myBook.title),
                 subtitle: Text(myBook.author),
                 onTap: () => Navigator.of(context).pop(myBook),

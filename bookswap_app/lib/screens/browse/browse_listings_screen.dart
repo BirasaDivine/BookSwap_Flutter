@@ -191,7 +191,9 @@ class BookListCard extends StatelessWidget {
                 height: 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: Colors.grey[200],
+                  color: book.imageUrl != null
+                      ? Colors.grey[200]
+                      : AppColors.primary.withOpacity(0.1),
                 ),
                 child: book.imageUrl != null
                     ? ClipRRect(
@@ -200,15 +202,36 @@ class BookListCard extends StatelessWidget {
                           book.imageUrl!,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.book,
-                              size: 40,
-                              color: Colors.grey,
+                            return Center(
+                              child: Icon(
+                                Icons.book_rounded,
+                                size: 40,
+                                color: AppColors.primary.withOpacity(0.5),
+                              ),
+                            );
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value:
+                                    loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                    : null,
+                                color: AppColors.yellow,
+                              ),
                             );
                           },
                         ),
                       )
-                    : const Icon(Icons.book, size: 40, color: Colors.grey),
+                    : Center(
+                        child: Icon(
+                          Icons.menu_book_rounded,
+                          size: 48,
+                          color: AppColors.primary.withOpacity(0.4),
+                        ),
+                      ),
               ),
 
               const SizedBox(width: 12),
