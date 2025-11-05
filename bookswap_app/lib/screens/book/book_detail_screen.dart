@@ -491,9 +491,16 @@ class BookDetailScreen extends StatelessWidget {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
 
+    // Get user name with fallbacks
+    final userName = authProvider.userModel?.displayName.isNotEmpty == true
+        ? authProvider.userModel!.displayName
+        : (authProvider.user?.displayName?.isNotEmpty == true
+            ? authProvider.user!.displayName!
+            : authProvider.user?.email?.split('@')[0] ?? 'Unknown');
+
     final chatRoom = await chatProvider.createOrGetChatRoom(
       user1Id: authProvider.user!.uid,
-      user1Name: authProvider.userModel!.displayName,
+      user1Name: userName,
       user2Id: book.ownerId,
       user2Name: book.ownerName,
     );

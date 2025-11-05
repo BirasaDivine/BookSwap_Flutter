@@ -43,15 +43,15 @@ class SwapProvider with ChangeNotifier {
   void _updateAllOffers() {
     // Combine both lists and remove duplicates by id
     final combined = <String, SwapOfferModel>{};
-    
+
     for (var offer in _sentOffers) {
       combined[offer.id] = offer;
     }
-    
+
     for (var offer in _receivedOffers) {
       combined[offer.id] = offer;
     }
-    
+
     // Convert to list and sort by creation date (newest first)
     _allOffers = combined.values.toList()
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
