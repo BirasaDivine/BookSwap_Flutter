@@ -54,13 +54,18 @@ class _VerificationScreenState extends State<VerificationScreen> {
     if (!mounted) return;
 
     if (authProvider.isEmailVerified) {
+      // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Email verified successfully!'),
           backgroundColor: Colors.green,
+          duration: Duration(seconds: 1),
         ),
       );
-      // The auth state listener will automatically navigate to MainScreen
+
+      // Navigate to main screen by popping back to root
+      // The Consumer in main.dart will detect isEmailVerified=true and show MainScreen
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

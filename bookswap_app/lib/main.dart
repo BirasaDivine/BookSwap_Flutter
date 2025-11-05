@@ -56,12 +56,12 @@ class MyApp extends StatelessWidget {
             if (!authProvider.isAuthenticated) {
               return const LoginScreen();
             }
-            
+
             // Authenticated but email not verified - show verification screen
             if (!authProvider.isEmailVerified) {
               return const VerificationScreen();
             }
-            
+
             // Authenticated and verified - show main app
             return const MainScreen();
           },
