@@ -24,9 +24,15 @@ class BookService {
       final bookId = _uuid.v4();
       String? imageUrl;
 
-      // Upload image if provided
+      // Upload image if provided (optional - gracefully handle errors)
       if (imageFile != null) {
-        imageUrl = await _uploadBookImage(bookId, imageFile);
+        try {
+          imageUrl = await _uploadBookImage(bookId, imageFile);
+        } catch (e) {
+          print('Image upload failed, continuing without image: $e');
+          // Continue without image instead of failing completely
+          imageUrl = null;
+        }
       }
 
       final book = BookModel(
