@@ -192,14 +192,14 @@ class BookListCard extends StatelessWidget {
                 height: 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: book.imageUrl != null
+                  color: book.photoUrl != null
                       ? Colors.grey[200]
                       : AppColors.primary.withOpacity(0.1),
                 ),
-                child: book.imageUrl != null
+                child: book.photoUrl != null
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: _buildImage(book.imageUrl!),
+                        child: _buildImage(book.photoUrl!),
                       )
                     : Center(
                         child: Icon(

@@ -21,16 +21,16 @@ class BookService {
   }) async {
     try {
       final bookId = _uuid.v4();
-      String? imageUrl;
+      String? photoUrl;
 
       // Convert image to base64 if provided
       if (imageFile != null) {
         try {
           final bytes = await imageFile.readAsBytes();
-          imageUrl = 'data:image/jpeg;base64,${base64Encode(bytes)}';
+          photoUrl = 'data:image/jpeg;base64,${base64Encode(bytes)}';
         } catch (e) {
           print('Image encoding failed, continuing without image: $e');
-          imageUrl = null;
+          photoUrl = null;
         }
       }
 
@@ -39,7 +39,7 @@ class BookService {
         title: title,
         author: author,
         condition: condition,
-        imageUrl: imageUrl,
+        photoUrl: photoUrl,
         ownerId: ownerId,
         ownerName: ownerName,
         createdAt: DateTime.now(),
@@ -120,7 +120,7 @@ class BookService {
       if (imageFile != null) {
         try {
           final bytes = await imageFile.readAsBytes();
-          updates['imageUrl'] = 'data:image/jpeg;base64,${base64Encode(bytes)}';
+          updates['photoUrl'] = 'data:image/jpeg;base64,${base64Encode(bytes)}';
         } catch (e) {
           print('Image encoding failed: $e');
         }

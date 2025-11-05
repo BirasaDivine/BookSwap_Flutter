@@ -70,8 +70,8 @@ class BookDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              child: book.imageUrl != null
-                  ? _buildBookImage(book.imageUrl!)
+              child: book.photoUrl != null
+                  ? _buildBookImage(book.photoUrl!)
                   : Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -422,10 +422,10 @@ class BookDetailScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                     color: AppColors.primary.withOpacity(0.1),
                   ),
-                  child: myBook.imageUrl != null
+                  child: myBook.photoUrl != null
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(4),
-                          child: _buildSmallImage(myBook.imageUrl!),
+                          child: _buildSmallImage(myBook.photoUrl!),
                         )
                       : Icon(
                           Icons.menu_book_rounded,

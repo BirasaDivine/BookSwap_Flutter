@@ -183,11 +183,11 @@ class _AddBookScreenState extends State<AddBookScreen> {
                             borderRadius: BorderRadius.circular(12),
                             child: Image.file(_imageFile!, fit: BoxFit.cover),
                           )
-                        : widget.bookToEdit?.imageUrl != null
+                        : widget.bookToEdit?.photoUrl != null
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.network(
-                              widget.bookToEdit!.imageUrl!,
+                              widget.bookToEdit!.photoUrl!,
                               fit: BoxFit.cover,
                             ),
                           )

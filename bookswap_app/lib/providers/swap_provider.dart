@@ -69,7 +69,16 @@ class SwapProvider with ChangeNotifier {
       return true;
     } catch (e) {
       _isLoading = false;
-      _errorMessage = 'Failed to create swap offer.';
+      // Show detailed error message
+      if (e.toString().contains('permission-denied')) {
+        _errorMessage =
+            'Permission denied. Please check Firebase security rules.';
+      } else if (e.toString().contains('not found')) {
+        _errorMessage = 'Book not found. Please try again.';
+      } else {
+        _errorMessage = 'Failed to create swap offer: ${e.toString()}';
+      }
+      print('Swap offer error: $e');
       notifyListeners();
       return false;
     }

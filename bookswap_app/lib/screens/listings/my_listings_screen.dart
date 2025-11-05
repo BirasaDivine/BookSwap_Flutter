@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
 import '../../constants/colors.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/book_provider.dart';
@@ -126,16 +127,10 @@ class MyBookCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: ListTile(
-        leading: book.imageUrl != null
+        leading: book.photoUrl != null
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  book.imageUrl!,
-                  width: 50,
-                  height: 70,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => const Icon(Icons.book),
-                ),
+                child: _buildImage(book.photoUrl!),
               )
             : const Icon(Icons.book, size: 40),
         title: Text(
@@ -198,7 +193,36 @@ class MyBookCard extends StatelessWidget {
     );
   }
 
-  Future<void> _deleteBook(BuildContext context) async {
+  Widget _buildImage(String photoUrl) {
+    // Check if it's a base64 image
+    if (photoUrl.startsWith('data:image')) {
+      try {
+        final base64String = photoUrl.split(',')[1];
+        final bytes = base64Decode(base64String);
+        return Image.memory(
+          bytes,
+          width: 50,
+          height: 70,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return const Icon(Icons.book);
+          },
+        );
+      } catch (e) {
+        return const Icon(Icons.book);
+      }
+    } else {
+      return Image.network(
+        photoUrl,
+        width: 50,
+        height: 70,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => const Icon(Icons.book),
+      );
+    }
+  }
+
+  void _deleteBook(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(

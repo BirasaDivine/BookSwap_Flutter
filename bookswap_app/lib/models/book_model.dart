@@ -32,7 +32,7 @@ class BookModel {
   final String title;
   final String author;
   final BookCondition condition;
-  final String? imageUrl;
+  final String? photoUrl;
   final String ownerId;
   final String ownerName;
   final DateTime createdAt;
@@ -45,7 +45,7 @@ class BookModel {
     required this.title,
     required this.author,
     required this.condition,
-    this.imageUrl,
+    this.photoUrl,
     required this.ownerId,
     required this.ownerName,
     required this.createdAt,
@@ -61,7 +61,7 @@ class BookModel {
       'title': title,
       'author': author,
       'condition': condition.label,
-      'imageUrl': imageUrl,
+      'photoUrl': photoUrl,
       'ownerId': ownerId,
       'ownerName': ownerName,
       'createdAt': Timestamp.fromDate(createdAt),
@@ -78,7 +78,7 @@ class BookModel {
       title: map['title'] ?? '',
       author: map['author'] ?? '',
       condition: BookCondition.fromString(map['condition'] ?? 'Used'),
-      imageUrl: map['imageUrl'],
+      photoUrl: map['photoUrl'],
       ownerId: map['ownerId'] ?? '',
       ownerName: map['ownerName'] ?? '',
       createdAt: (map['createdAt'] as Timestamp).toDate(),
@@ -102,7 +102,7 @@ class BookModel {
     String? title,
     String? author,
     BookCondition? condition,
-    String? imageUrl,
+    String? photoUrl,
     String? ownerId,
     String? ownerName,
     DateTime? createdAt,
@@ -115,7 +115,7 @@ class BookModel {
       title: title ?? this.title,
       author: author ?? this.author,
       condition: condition ?? this.condition,
-      imageUrl: imageUrl ?? this.imageUrl,
+      photoUrl: photoUrl ?? this.photoUrl,
       ownerId: ownerId ?? this.ownerId,
       ownerName: ownerName ?? this.ownerName,
       createdAt: createdAt ?? this.createdAt,
