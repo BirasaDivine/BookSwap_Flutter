@@ -89,23 +89,19 @@ class SwapService {
 
   /// Get all swap offers for a user (both as requester and owner)
   Stream<List<SwapOfferModel>> getAllSwapOffersForUser(String userId) {
+    // We can't use a single query with OR, so we need to merge two streams
+    // However, for simplicity, we'll just get the ones where user is owner
+    // and combine with the requester stream in the provider
     return _firestore
         .collection('swap_offers')
+        .where('ownerId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-          final allOffers = snapshot.docs
+        .map(
+          (snapshot) => snapshot.docs
               .map((doc) => SwapOfferModel.fromDocument(doc))
-              .toList();
-
-          // Filter offers where user is either requester or owner
-          return allOffers
-              .where(
-                (offer) =>
-                    offer.requesterId == userId || offer.ownerId == userId,
-              )
-              .toList();
-        });
+              .toList(),
+        );
   }
 
   /// Accept a swap offer
