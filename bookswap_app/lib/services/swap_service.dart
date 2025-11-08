@@ -128,10 +128,63 @@ class SwapService {
   /// Accept a swap offer
   Future<void> acceptSwapOffer(String swapOfferId) async {
     try {
-      await _firestore.collection('swap_offers').doc(swapOfferId).update({
-        'status': SwapStatus.accepted.label,
-        'respondedAt': Timestamp.fromDate(DateTime.now()),
-      });
+      // Get the swap offer
+      final doc = await _firestore
+          .collection('swap_offers')
+          .doc(swapOfferId)
+          .get();
+      if (!doc.exists) {
+        throw Exception('Swap offer not found');
+      }
+
+      final swapOffer = SwapOfferModel.fromDocument(doc);
+
+      // Get both books
+      final requestedBook = await _bookService.getBookById(swapOffer.requestedBookId);
+      final offeredBook = await _bookService.getBookById(swapOffer.offeredBookId);
+
+      if (requestedBook == null || offeredBook == null) {
+        throw Exception('One or both books not found');
+      }
+
+      // Use a batch to update everything atomically
+      final batch = _firestore.batch();
+
+      // Update swap offer status
+      batch.update(
+        _firestore.collection('swap_offers').doc(swapOfferId),
+        {
+          'status': SwapStatus.accepted.label,
+          'respondedAt': Timestamp.fromDate(DateTime.now()),
+        },
+      );
+
+      // Swap book ownership
+      // requestedBook goes to requester, offeredBook goes to owner
+      batch.update(
+        _firestore.collection('books').doc(swapOffer.requestedBookId),
+        {
+          'ownerId': swapOffer.requesterId,
+          'ownerName': swapOffer.requesterName,
+          'isAvailable': true, // Make available again
+          'updatedAt': Timestamp.fromDate(DateTime.now()),
+        },
+      );
+
+      batch.update(
+        _firestore.collection('books').doc(swapOffer.offeredBookId),
+        {
+          'ownerId': swapOffer.ownerId,
+          'ownerName': swapOffer.ownerName,
+          'isAvailable': true, // Make available again
+          'updatedAt': Timestamp.fromDate(DateTime.now()),
+        },
+      );
+
+      // Commit all changes
+      await batch.commit();
+      
+      print('✅ Swap accepted and books ownership transferred!');
     } catch (e) {
       print('Accept swap offer error: $e');
       rethrow;
