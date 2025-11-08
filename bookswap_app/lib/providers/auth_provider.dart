@@ -132,6 +132,10 @@ class AuthProvider with ChangeNotifier {
       _user = _authService.currentUser;
 
       if (_user != null) {
+        // Update emailVerified status in Firestore
+        await _authService.updateEmailVerificationStatus(_user!.emailVerified);
+
+        // Reload user model from Firestore to get updated data
         _userModel = await _authService.getUserModel(_user!.uid);
       }
 

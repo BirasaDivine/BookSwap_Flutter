@@ -136,6 +136,20 @@ class AuthService {
     }
   }
 
+  /// Update email verification status in Firestore
+  Future<void> updateEmailVerificationStatus(bool isVerified) async {
+    try {
+      if (_auth.currentUser != null) {
+        await _firestore.collection('users').doc(_auth.currentUser!.uid).update(
+          {'emailVerified': isVerified},
+        );
+      }
+    } catch (e) {
+      print('Update email verification status error: $e');
+      rethrow;
+    }
+  }
+
   /// Send password reset email
   Future<void> sendPasswordResetEmail(String email) async {
     try {
