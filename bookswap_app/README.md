@@ -1,6 +1,6 @@
 # BookSwap - Student Book Exchange Platform
 
-A comprehensive Flutter application that enables students to swap textbooks with each other. Built with Firebase for backend services, featuring real-time chat, swap offers, and complete CRUD operations.
+A comprehensive Flutter application that enables users to swap textbooks with each other. Built with Firebase for backend services, featuring real-time chat, swap offers, and complete CRUD operations.
 
 ## 🎯 Features
 
@@ -17,13 +17,9 @@ A comprehensive Flutter application that enables students to swap textbooks with
 
 - **State Management**: Provider pattern for reactive UI
 - **Real-time Sync**: Firestore streams for instant updates
-- **Image Upload**: Firebase Storage for book cover images
+- **Image Upload**: Firebase Storage for book cover images(base-64 format)
 - **Clean Architecture**: Separation of models, services, providers, and UI
 - **Material Design**: Modern, intuitive user interface
-
-## 📱 Screenshots
-
-[Add your app screenshots here after running the app]
 
 ## 🏗️ Architecture
 
@@ -123,23 +119,7 @@ lib/
    flutter pub get
    ```
 
-3. **Firebase Setup** (IMPORTANT!)
-
-   **See `FIREBASE_SETUP_GUIDE.md` for detailed instructions**
-
-   Quick steps:
-
-   - Create Firebase project at [Firebase Console](https://console.firebase.google.com/)
-   - Add Android/iOS apps to Firebase project
-   - Download configuration files:
-     - `google-services.json` → `android/app/`
-     - `GoogleService-Info.plist` → iOS project via Xcode
-   - Enable Authentication (Email/Password)
-   - Create Firestore Database
-   - Create Storage bucket
-   - Configure security rules (see Firebase guide)
-
-4. **Run the app**
+3. **Run the app**
 
    ```bash
    # For Android
@@ -158,7 +138,6 @@ lib/
 
 - **Authentication**: Email/Password sign-in
 - **Firestore Database**: Real-time NoSQL database
-- **Storage**: Image storage for book covers
 
 ### Database Structure
 
@@ -204,23 +183,6 @@ chat_rooms/
               ├── message: string
               └── timestamp: timestamp
 ```
-
-## 🎨 State Management
-
-This app uses **Provider** for state management:
-
-- **AuthProvider**: Manages authentication state
-- **BookProvider**: Handles book listings and CRUD operations
-- **SwapProvider**: Manages swap offers and their states
-- **ChatProvider**: Handles chat rooms and messages
-
-### Why Provider?
-
-- Official Flutter recommendation
-- Simple and easy to learn
-- Sufficient for medium-sized apps
-- Less boilerplate than BLoC
-- Excellent documentation
 
 ## 📋 Features Breakdown
 
@@ -302,97 +264,3 @@ dependencies:
   uuid: ^4.5.1
   cupertino_icons: ^1.0.8
 ```
-
-## 🔒 Security
-
-### Firestore Rules
-
-See `FIREBASE_SETUP_GUIDE.md` for complete security rules.
-
-Key principles:
-
-- Users can only modify their own data
-- Books can only be modified by owners
-- Swap offers restricted to participants
-- Chat rooms restricted to participants
-
-### Storage Rules
-
-- Authenticated users can read images
-- Only authenticated users can upload
-- Max file size: 5MB
-- Only image files allowed
-
-## 🐛 Common Issues & Solutions
-
-### "No Firebase App '[DEFAULT]' has been created"
-
-**Solution**: Ensure `Firebase.initializeApp()` is called in `main.dart`
-
-### "PERMISSION_DENIED"
-
-**Solution**: Update Firestore/Storage security rules
-
-### "Package name mismatch"
-
-**Solution**: Verify package name in `google-services.json` matches `build.gradle`
-
-### "Email verification not working"
-
-**Solution**: Check spam folder, verify Firebase email templates
-
-See `FIREBASE_SETUP_GUIDE.md` for more solutions.
-
-## 📚 Documentation
-
-- **`PROJECT_SUMMARY.md`**: Complete project overview
-- **`FIREBASE_SETUP_GUIDE.md`**: Detailed Firebase configuration steps
-- **`IMPLEMENTATION_GUIDE.md`**: Development guide and best practices
-
-## 🎥 Demo Video
-
-[Link to demo video showing:]
-
-- User authentication flow
-- Book CRUD operations
-- Swap functionality
-- Chat feature
-- Firebase Console integration
-
-## 🤝 Contributing
-
-This is an academic project. For suggestions or issues:
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 👨‍💻 Author
-
-**Divine Birasa**
-
-- GitHub: [@BirasaDivine](https://github.com/BirasaDivine)
-
-## 🙏 Acknowledgments
-
-- Flutter team for excellent documentation
-- Firebase for backend services
-- Provider package maintainers
-- Course instructors and TAs
-
-## 📞 Support
-
-For questions or support:
-
-- Create an issue in the repository
-- Contact: [your-email@example.com]
-
----
-
-**Built with Flutter 💙 and Firebase 🔥**
