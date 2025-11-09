@@ -75,7 +75,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.2),
+                        color: Colors.green.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: Colors.green),
                       ),
@@ -119,7 +119,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title: const Text('Notification Reminders'),
                     subtitle: const Text('Get notified about swap offers'),
                     value: _notificationEnabled,
-                    activeColor: AppColors.yellow,
+                    activeThumbColor: AppColors.yellow,
                     onChanged: (value) {
                       setState(() {
                         _notificationEnabled = value;
@@ -141,7 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title: const Text('Email Updates'),
                     subtitle: const Text('Receive email notifications'),
                     value: _emailUpdatesEnabled,
-                    activeColor: AppColors.yellow,
+                    activeThumbColor: AppColors.yellow,
                     onChanged: (value) {
                       setState(() {
                         _emailUpdatesEnabled = value;
@@ -306,3 +306,4 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 }
+

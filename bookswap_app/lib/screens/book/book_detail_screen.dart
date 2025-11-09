@@ -65,8 +65,8 @@ class BookDetailScreen extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    AppColors.primary.withOpacity(0.1),
-                    AppColors.yellow.withOpacity(0.1),
+                    AppColors.primary.withValues(alpha: 0.1),
+                    AppColors.yellow.withValues(alpha: 0.1),
                   ],
                 ),
               ),
@@ -79,7 +79,7 @@ class BookDetailScreen extends StatelessWidget {
                           Icon(
                             Icons.auto_stories_rounded,
                             size: 120,
-                            color: AppColors.primary.withOpacity(0.3),
+                            color: AppColors.primary.withValues(alpha: 0.3),
                           ),
                           const SizedBox(height: 16),
                           Text(
@@ -137,7 +137,7 @@ class BookDetailScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: _getConditionColor(
                             book.condition,
-                          ).withOpacity(0.1),
+                          ).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(6),
                           border: Border.all(
                             color: _getConditionColor(book.condition),
@@ -297,7 +297,7 @@ class BookDetailScreen extends StatelessWidget {
               Icon(
                 Icons.menu_book_rounded,
                 size: 100,
-                color: AppColors.primary.withOpacity(0.3),
+                color: AppColors.primary.withValues(alpha: 0.3),
               ),
               const SizedBox(height: 8),
               Text(
@@ -323,7 +323,7 @@ class BookDetailScreen extends StatelessWidget {
                 Icon(
                   Icons.menu_book_rounded,
                   size: 100,
-                  color: AppColors.primary.withOpacity(0.3),
+                  color: AppColors.primary.withValues(alpha: 0.3),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -348,18 +348,18 @@ class BookDetailScreen extends StatelessWidget {
           bytes,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
-            return Icon(Icons.book, color: AppColors.primary.withOpacity(0.5));
+            return Icon(Icons.book, color: AppColors.primary.withValues(alpha: 0.5));
           },
         );
       } catch (e) {
-        return Icon(Icons.book, color: AppColors.primary.withOpacity(0.5));
+        return Icon(Icons.book, color: AppColors.primary.withValues(alpha: 0.5));
       }
     } else {
       return Image.network(
         imageUrl,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
-          return Icon(Icons.book, color: AppColors.primary.withOpacity(0.5));
+          return Icon(Icons.book, color: AppColors.primary.withValues(alpha: 0.5));
         },
       );
     }
@@ -420,7 +420,7 @@ class BookDetailScreen extends StatelessWidget {
                   height: 60,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: AppColors.primary.withValues(alpha: 0.1),
                   ),
                   child: myBook.photoUrl != null
                       ? ClipRRect(
@@ -429,7 +429,7 @@ class BookDetailScreen extends StatelessWidget {
                         )
                       : Icon(
                           Icons.menu_book_rounded,
-                          color: AppColors.primary.withOpacity(0.5),
+                          color: AppColors.primary.withValues(alpha: 0.5),
                         ),
                 ),
                 title: Text(myBook.title),
@@ -495,8 +495,8 @@ class BookDetailScreen extends StatelessWidget {
     final userName = authProvider.userModel?.displayName.isNotEmpty == true
         ? authProvider.userModel!.displayName
         : (authProvider.user?.displayName?.isNotEmpty == true
-            ? authProvider.user!.displayName!
-            : authProvider.user?.email?.split('@')[0] ?? 'Unknown');
+              ? authProvider.user!.displayName!
+              : authProvider.user?.email?.split('@')[0] ?? 'Unknown');
 
     final chatRoom = await chatProvider.createOrGetChatRoom(
       user1Id: authProvider.user!.uid,
@@ -563,3 +563,4 @@ class BookDetailScreen extends StatelessWidget {
     }
   }
 }
+

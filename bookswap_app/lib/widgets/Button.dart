@@ -9,11 +9,11 @@ class Button extends StatelessWidget {
   final ButtonType type;
 
   const Button({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
     this.type = ButtonType.signIn,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

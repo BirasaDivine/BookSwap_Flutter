@@ -120,7 +120,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 height: 120,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.yellow.withOpacity(0.2),
+                  color: AppColors.yellow.withValues(alpha: 0.2),
                 ),
                 child: const Icon(
                   Icons.mark_email_unread_outlined,
@@ -205,3 +205,4 @@ class _VerificationScreenState extends State<VerificationScreen> {
     );
   }
 }
+

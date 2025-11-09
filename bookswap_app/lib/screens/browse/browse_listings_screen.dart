@@ -71,7 +71,7 @@ class _BrowseListingsScreenState extends State<BrowseListingsScreen> {
                       )
                     : null,
                 filled: true,
-                fillColor: Colors.white.withOpacity(0.1),
+                fillColor: Colors.white.withValues(alpha: 0.1),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -194,7 +194,7 @@ class BookListCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   color: book.photoUrl != null
                       ? Colors.grey[200]
-                      : AppColors.primary.withOpacity(0.1),
+                      : AppColors.primary.withValues(alpha: 0.1),
                 ),
                 child: book.photoUrl != null
                     ? ClipRRect(
@@ -205,7 +205,7 @@ class BookListCard extends StatelessWidget {
                         child: Icon(
                           Icons.menu_book_rounded,
                           size: 48,
-                          color: AppColors.primary.withOpacity(0.4),
+                          color: AppColors.primary.withValues(alpha: 0.4),
                         ),
                       ),
               ),
@@ -248,7 +248,7 @@ class BookListCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: _getConditionColor(
                           book.condition,
-                        ).withOpacity(0.1),
+                        ).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                         border: Border.all(
                           color: _getConditionColor(book.condition),
@@ -338,7 +338,7 @@ class BookListCard extends StatelessWidget {
               child: Icon(
                 Icons.book_rounded,
                 size: 40,
-                color: AppColors.primary.withOpacity(0.5),
+                color: AppColors.primary.withValues(alpha: 0.5),
               ),
             );
           },
@@ -348,7 +348,7 @@ class BookListCard extends StatelessWidget {
           child: Icon(
             Icons.book_rounded,
             size: 40,
-            color: AppColors.primary.withOpacity(0.5),
+            color: AppColors.primary.withValues(alpha: 0.5),
           ),
         );
       }
@@ -362,7 +362,7 @@ class BookListCard extends StatelessWidget {
             child: Icon(
               Icons.book_rounded,
               size: 40,
-              color: AppColors.primary.withOpacity(0.5),
+              color: AppColors.primary.withValues(alpha: 0.5),
             ),
           );
         },
@@ -370,3 +370,4 @@ class BookListCard extends StatelessWidget {
     }
   }
 }
+

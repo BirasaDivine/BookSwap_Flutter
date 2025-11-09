@@ -7,7 +7,7 @@ class ChatProvider with ChangeNotifier {
   final ChatService _chatService = ChatService();
 
   List<ChatRoomModel> _chatRooms = [];
-  Map<String, List<ChatMessageModel>> _messages = {};
+  final Map<String, List<ChatMessageModel>> _messages = {};
   bool _isLoading = false;
   String? _errorMessage;
 

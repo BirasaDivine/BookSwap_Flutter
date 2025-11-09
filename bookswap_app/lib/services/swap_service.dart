@@ -140,8 +140,12 @@ class SwapService {
       final swapOffer = SwapOfferModel.fromDocument(doc);
 
       // Get both books
-      final requestedBook = await _bookService.getBookById(swapOffer.requestedBookId);
-      final offeredBook = await _bookService.getBookById(swapOffer.offeredBookId);
+      final requestedBook = await _bookService.getBookById(
+        swapOffer.requestedBookId,
+      );
+      final offeredBook = await _bookService.getBookById(
+        swapOffer.offeredBookId,
+      );
 
       if (requestedBook == null || offeredBook == null) {
         throw Exception('One or both books not found');
@@ -151,13 +155,10 @@ class SwapService {
       final batch = _firestore.batch();
 
       // Update swap offer status
-      batch.update(
-        _firestore.collection('swap_offers').doc(swapOfferId),
-        {
-          'status': SwapStatus.accepted.label,
-          'respondedAt': Timestamp.fromDate(DateTime.now()),
-        },
-      );
+      batch.update(_firestore.collection('swap_offers').doc(swapOfferId), {
+        'status': SwapStatus.accepted.label,
+        'respondedAt': Timestamp.fromDate(DateTime.now()),
+      });
 
       // Swap book ownership
       // requestedBook goes to requester, offeredBook goes to owner
@@ -183,7 +184,7 @@ class SwapService {
 
       // Commit all changes
       await batch.commit();
-      
+
       print('✅ Swap accepted and books ownership transferred!');
     } catch (e) {
       print('Accept swap offer error: $e');

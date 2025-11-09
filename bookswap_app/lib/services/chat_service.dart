@@ -119,8 +119,9 @@ class ChatService {
                   .map((doc) => ChatRoomModel.fromDocument(doc))
                   .toList()
                 ..sort((a, b) {
-                  if (a.lastMessageTime == null && b.lastMessageTime == null)
+                  if (a.lastMessageTime == null && b.lastMessageTime == null) {
                     return 0;
+                  }
                   if (a.lastMessageTime == null) return 1;
                   if (b.lastMessageTime == null) return -1;
                   return b.lastMessageTime!.compareTo(a.lastMessageTime!);
